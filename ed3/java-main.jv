@@ -1,0 +1,221 @@
+import java.util.ArrayList;
+import java.util.List;
+
+//
+// ========================= 1. FOLHA DE PAGAMENTO =========================
+//
+
+/**
+ * Interface que define o comportamento de um funcionário.
+ */
+interface Pagavel {
+    String getNome();
+    double getSalario();
+}
+
+/**
+ * Classe que representa um funcionário comum.
+ */
+class Funcionario implements Pagavel {
+    private String nome;
+    private double salario;
+
+    public Funcionario(String nome, double salario) {
+        this.nome = nome;
+        this.salario = salario;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public double getSalario() {
+        return salario;
+    }
+}
+
+/**
+ * Classe que representa a folha de pagamento de funcionários.
+ */
+class FolhaPagamento {
+    private List<Pagavel> funcionarios = new ArrayList<>();
+
+    public void adicionarFuncionario(Pagavel p) {
+        funcionarios.add(p);
+    }
+
+    public void imprimirFolha() {
+        for (Pagavel p : funcionarios) {
+            System.out.println("Nome: " + p.getNome());
+            System.out.println("Salário: " + p.getSalario());
+        }
+    }
+}
+
+//
+// ========================= 2. GRÁFICA ONLINE =========================
+//
+
+/**
+ * Interface para arquivos digitais imprimíveis.
+ */
+interface Imprimivel {
+    void imprimir();
+}
+
+/**
+ * Classe que representa uma imagem digital.
+ */
+class Imagem implements Imprimivel {
+    private String titulo;
+
+    public Imagem(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public void imprimir() {
+        System.out.println("Imagem: " + titulo);
+    }
+}
+
+/**
+ * Classe que representa um texto digital.
+ */
+class Texto implements Imprimivel {
+    private String conteudo;
+
+    public Texto(String conteudo) {
+        this.conteudo = conteudo;
+    }
+
+    public void imprimir() {
+        System.out.println("Texto: " + conteudo);
+    }
+}
+
+/**
+ * Classe que gerencia a impressão dos itens.
+ */
+class Impressora {
+    private List<Imprimivel> itens = new ArrayList<>();
+
+    public void adicionarItem(Imprimivel item) {
+        itens.add(item);
+    }
+
+    public void imprimirTodos() {
+        for (Imprimivel item : itens) {
+            item.imprimir();
+        }
+    }
+}
+
+//
+// ========================= 3. SISTEMA DE LOGIN =========================
+//
+
+/**
+ * Interface para autenticação de usuários.
+ */
+interface Autenticavel {
+    boolean autenticar(String senha);
+}
+
+/**
+ * Classe que representa um usuário com login e senha.
+ */
+class Usuario implements Autenticavel {
+    private String login;
+    private String senha;
+
+    public Usuario(String login, String senha) {
+        this.login = login;
+        this.senha = senha;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public boolean autenticar(String senha) {
+        return this.senha.equals(senha);
+    }
+}
+
+/**
+ * Classe que representa um cliente do sistema.
+ */
+class Cliente extends Usuario {
+    public Cliente(String login, String senha) {
+        super(login, senha);
+    }
+}
+
+/**
+ * Classe que representa um administrador do sistema.
+ */
+class Administrador extends Usuario {
+    public Administrador(String login, String senha) {
+        super(login, senha);
+    }
+}
+
+/**
+ * Classe responsável por gerenciar autenticação e login.
+ */
+class SistemaLogin {
+    private List<Autenticavel> usuarios = new ArrayList<>();
+
+    public void adicionarUsuario(Autenticavel usuario) {
+        usuarios.add(usuario);
+    }
+
+    public void realizarLogin(String login, String senha) {
+        for (Autenticavel usuario : usuarios) {
+            if (usuario instanceof Usuario u) {
+                if (u.getLogin().equals(login)) {
+                    if (u.autenticar(senha)) {
+                        System.out.println("Login bem-sucedido.");
+                    } else {
+                        System.out.println("Senha incorreta.");
+                    }
+                    return;
+                }
+            }
+        }
+        System.out.println("Usuário não encontrado.");
+    }
+}
+
+//
+// ========================= MAIN =========================
+//
+
+/**
+ * Classe principal com exemplos de uso dos três sistemas.
+ */
+public class SistemaCompleto {
+
+    public static void main(String[] args) {
+        System.out.println("== Folha de Pagamento ==");
+        FolhaPagamento folha = new FolhaPagamento();
+        folha.adicionarFuncionario(new Funcionario("Carlos", 2000.0));
+        folha.adicionarFuncionario(new Funcionario("Ana", 3000.0));
+        folha.imprimirFolha();
+
+        System.out.println("\n== Gráfica Online ==");
+        Impressora impressora = new Impressora();
+        impressora.adicionarItem(new Imagem("logo.png"));
+        impressora.adicionarItem(new Texto("Relatório mensal"));
+        impressora.imprimirTodos();
+
+        System.out.println("\n== Sistema de Login ==");
+        SistemaLogin sistema = new SistemaLogin();
+        sistema.adicionarUsuario(new Cliente("joao", "1234"));
+        sistema.adicionarUsuario(new Administrador("admin", "root"));
+
+        sistema.realizarLogin("joao", "1234");      // Login bem-sucedido
+        sistema.realizarLogin("joao", "errado");    // Senha incorreta
+        sistema.realizarLogin("fulano", "1234");    // Usuário não encontrado
+    }
+}
